@@ -1,8 +1,9 @@
-#'LoadHTMLFiles
-#'  @rdname LoadHTMLFiles
+#' LoadHTMLFiles
+#' @rdname LoadHTMLFiles
 #' @param ProjectName character, the name of the folder holding collected HTML files, use \code{ListProjects} fnuction to see all projects.
 #' @param type character, the type of returned variable, either vector or list.
 #' @param max Integer, maximum number of files to load.
+#' @param DIR character, By default it's your local R workspace, if you set a custom folder for your crawling project then use DIR param to access this folder.
 #' @return
 #' \code{LoadHTMLFiles}, a character vector or a list;
 #' @author salim khalil
@@ -17,8 +18,11 @@
 #' #Load only 10 first HTMl files in DataHTML2 list
 #' }
 
-LoadHTMLFiles <- function(ProjectName, type="vector", max) {
-  Listfiles<-list.files(paste0(getwd(),"/",ProjectName),pattern = ".*\\.html")
+LoadHTMLFiles <- function(ProjectName, type="vector", max, DIR) {
+  if (missing(DIR)) {
+    DIR <- getwd()
+  }
+  Listfiles<-list.files(paste0(DIR,"/",ProjectName),pattern = ".*\\.html")
 
   if(type=="vector") result<-vector()
   else if(type=="list") result<-list()
@@ -26,13 +30,13 @@ LoadHTMLFiles <- function(ProjectName, type="vector", max) {
   if(length(Listfiles)>0){
     if (missing(max)){
       for (f in Listfiles ){
-        filetxt<-readChar(paste0(getwd(),"/",ProjectName,"/",f),file.info(paste0(getwd(),"/",ProjectName,"/",f))$size )
+        filetxt<-readChar(paste0(DIR,"/",ProjectName,"/",f),file.info(paste0(DIR,"/",ProjectName,"/",f))$size )
         result<-c(result, filetxt)
       }
     } else {
       i=1
       while(i<=max){
-        filetxt<-readChar(paste0(getwd(),"/",ProjectName,"/",Listfiles[i]),file.info(paste0(getwd(),"/",ProjectName,"/",Listfiles[i]))$size )
+        filetxt<-readChar(paste0(DIR,"/",ProjectName,"/",Listfiles[i]),file.info(paste0(DIR,"/",ProjectName,"/",Listfiles[i]))$size )
         result<-c(result, filetxt)
         i<-i+1
       }
